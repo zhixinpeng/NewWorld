@@ -387,7 +387,7 @@
     "yMaxSpeed": -80,
     "initHp": 5,
     "score": 2500,
-    "enemyType": 1,
+    "enemyType": 2,
     "enemyBulletFreq": 3,
     "heroDropHp": 10,
     "initSize": 45,

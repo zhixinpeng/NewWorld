@@ -1,3 +1,6 @@
+import BulletGroup from './BulletGroup'
+import Controller from './Controller'
+import Enemy from './Enemy'
 import { GameState } from './Shared'
 const { ccclass, property } = cc._decorator
 
@@ -18,8 +21,15 @@ export default class Hero extends cc.Component {
   @property(cc.Node)
   private hpProgressBar: cc.Node = null
 
+  @property(BulletGroup)
+  private bulletGroup: BulletGroup = null
+
+  @property(cc.Node)
+  private heroDropHp: cc.Node = null
+
   private currentX: number
   private currentState: GameState
+  private controller: Controller
 
   protected onLoad(): void {
     const manager = cc.director.getCollisionManager()
@@ -32,6 +42,7 @@ export default class Hero extends cc.Component {
     this.node.y = -(this.node.parent.height / 2) + this.node.height / 2 + 12
 
     this.setHeroHPProgress()
+    this.controller = cc.find('Controller').getComponent('Controller')
   }
 
   public onDrag() {
@@ -39,7 +50,7 @@ export default class Hero extends cc.Component {
     this.node.parent.on(cc.Node.EventType.TOUCH_MOVE, this.dragMove, this)
   }
 
-  public offDrag(){
+  public offDrag() {
     this.node.parent.off(cc.Node.EventType.TOUCH_START, this.dragStart, this)
     this.node.parent.off(cc.Node.EventType.TOUCH_MOVE, this.dragMove, this)
   }
@@ -72,7 +83,51 @@ export default class Hero extends cc.Component {
     }
   }
 
-  onCollisionEnter(other: cc.Component, self: cc.Component) {
-    // console.log(other, self)
+  private onCollisionEnter(other: cc.Component, self: cc.Component) {
+    if (other.node.group === 'buff') {
+      if (other.node.name === 'buffBullet') {
+        this.bulletGroup.changeBullet(other.node.name)
+      } else if (other.node.name === 'buffBomb') {
+        this.controller.getBuffBomb()
+      } else if (other.node.name === 'buffHeart') {
+        if (this.initHp - this.hp >= 5) {
+          this.hp += 5
+        } else {
+          this.hp = this.initHp
+        }
+      }
+    } else if (other.node.group === 'enemy') {
+      const enemy: Enemy = other.node.parent.getComponent('Enemy')
+      this.hp -= enemy.heroDropHp
+      other.node.group = 'default'
+      if (this.hp > 0) this.heroHitByEnemyShowBlood()
+    } else {
+      return false
+    }
+
+    this.setHeroHPProgress()
+    if (this.hp <= 0) {
+      const animation = this.node.getComponent(cc.Animation)
+      animation.play('bomb')
+      animation.on('finished', this.onFinished, this)
+      this.controller.gameOver()
+    }
+  }
+
+  // 被敌人碰撞掉血
+  private heroHitByEnemyShowBlood() {
+    this.heroDropHp.active = true
+    this.heroDropHp.opacity = 0
+    cc.tween(this.heroDropHp)
+      .to(0.2, { opacity: 100 })
+      .to(0.2, { opacity: 0 })
+      .call(() => {
+        this.heroDropHp.active = false
+      })
+      .start()
+  }
+
+  private onFinished() {
+    this.node.destroy()
   }
 }

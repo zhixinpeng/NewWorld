@@ -19,6 +19,7 @@ export default class BulletGroup extends cc.Component {
   public currentState: GameState
   private bulletCallback: Function
   private isDeadBullet: boolean
+  private buffCallback: Function
 
   protected onLoad(): void {
     this.isDeadBullet = false
@@ -67,5 +68,31 @@ export default class BulletGroup extends cc.Component {
   public bulletDied(node: cc.Node) {
     const poolName = node.getComponent('Bullet').poolName
     backToNodePool(this, poolName, node)
+  }
+
+  public changeBullet(name: string) {
+    if (this.isDeadBullet) return
+    this.unschedule(this.bulletCallback)
+    this.unschedule(this.buffCallback)
+    for (let i = 0; i < this.bulletLimited.length; i++) {
+      if (this.bulletLimited[i].originName === name) {
+        this.buffCallback = () => {
+          this.getNewBullet(this.bulletLimited[i])
+          this.isDeadBullet = true
+        }
+        this.schedule(
+          this.buffCallback,
+          this.bulletLimited[i].freqTime,
+          this.bulletLimited[i].limitedTime,
+        )
+        const delay = this.bulletLimited[i].freqTime * this.bulletLimited[i].limitedTime
+        this.schedule(
+          this.bulletCallback,
+          this.bulletInfinite.freqTime,
+          cc.macro.REPEAT_FOREVER,
+          delay,
+        )
+      }
+    }
   }
 }

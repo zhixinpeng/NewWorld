@@ -13,7 +13,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "buffBullet",
+    "_name": "enemyBullet",
     "_objFlags": 0,
     "_parent": null,
     "_children": [],
@@ -42,8 +42,8 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 16,
-      "height": 16
+      "width": 8,
+      "height": 8
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -75,8 +75,8 @@
     "_skewX": 0,
     "_skewY": 0,
     "_is3DNode": false,
-    "_groupIndex": 3,
-    "groupIndex": 3,
+    "_groupIndex": 5,
+    "groupIndex": 5,
     "_id": ""
   },
   {
@@ -95,7 +95,7 @@
     "_srcBlendFactor": 770,
     "_dstBlendFactor": 771,
     "_spriteFrame": {
-      "__uuid__": "0f72a8f0-58a8-4460-9a8c-223afaaccbbb"
+      "__uuid__": "44a4fb85-b468-4986-8981-fa56c9873f23"
     },
     "_type": 0,
     "_sizeMode": 0,
@@ -129,23 +129,22 @@
     },
     "_size": {
       "__type__": "cc.Size",
-      "width": 16,
-      "height": 16
+      "width": 8,
+      "height": 8
     },
     "_id": ""
   },
   {
-    "__type__": "aec05nDS21AOZq4jr6vDjj9",
+    "__type__": "2ca8ebHmzNMfJFY//L0e1oY",
     "_name": "",
     "_objFlags": 0,
     "node": {
       "__id__": 1
     },
     "_enabled": true,
-    "xMinSpeed": 30,
-    "xMaxSpeed": 50,
-    "yMinSpeed": -50,
-    "yMaxSpeed": -50,
+    "xSpeed": 0,
+    "ySpeed": -10,
+    "hpDrop": 1,
     "_id": ""
   },
   {

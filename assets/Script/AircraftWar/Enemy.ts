@@ -1,4 +1,5 @@
 import BuffGroup from './BuffGroup'
+import EnemyBulletGroup from './EnemyBulletGroup'
 import EnemyGroup from './EnemyGroup'
 import { GameState } from './Shared'
 
@@ -31,13 +32,13 @@ export default class Enemy extends cc.Component {
   private enemyBulletFreq: number = 5
 
   @property
-  private heroDropHp: number = 5
+  public heroDropHp: number = 5
 
   @property
   private initSize: number = 30
 
   @property
-  private buffType: string = 'none'
+  public buffType: string = 'none'
 
   @property(cc.Node)
   private nodeCollision: cc.Node = null
@@ -56,13 +57,16 @@ export default class Enemy extends cc.Component {
   private xSpeed: number
   private ySpeed: number
   private enemyGroup: EnemyGroup
+  private enemyBulletGroup: EnemyBulletGroup
   private buffGroup: BuffGroup
+  private bulletCallbak: Function
 
   protected onLoad(): void {
     this.xSpeed = Math.random() * (this.xMaxSpeed - this.xMinSpeed) + this.xMinSpeed
     if (this.xMaxSpeed && Math.ceil(Math.random() * 10) < 5) this.xSpeed = -this.xSpeed
     this.ySpeed = Math.random() * (this.yMaxSpeed - this.yMinSpeed) + this.yMinSpeed
     this.enemyGroup = this.node.parent.getComponent('EnemyGroup')
+    this.enemyBulletGroup = cc.find('Canvas/Enemy Bullet Group').getComponent('EnemyBulletGroup')
     this.buffGroup = cc.find('Canvas/Buff Group').getComponent('BuffGroup')
   }
 
@@ -112,6 +116,7 @@ export default class Enemy extends cc.Component {
 
     if (this.node.y < -this.node.parent.height / 2 - this.node.height / 2) {
       this.enemyGroup.enemyDied(this.node, 0)
+      if (this.enemyType !== 1) this.unschedule(this.bulletCallbak)
     }
   }
 
@@ -121,6 +126,7 @@ export default class Enemy extends cc.Component {
     const animation = this.node.getComponent(cc.Animation)
     const animationName = 'bomb'
     if (!isHero) score = this.score
+    if (this.enemyType !== 1) this.unschedule(this.bulletCallbak)
     this.image.active = false
     this.buffGroup.createHeroBuff(this.node)
     if (this.particleSystemA && this.particleSystemB) {
@@ -134,5 +140,14 @@ export default class Enemy extends cc.Component {
       this.node.height = this.initSize
       this.enemyGroup.enemyDied(this.node, score)
     })
+  }
+
+  protected onEnable(): void {
+    if (this.enemyType !== 1) {
+      this.bulletCallbak = () => {
+        this.enemyBulletGroup.getNewBullet(this.node)
+      }
+      this.schedule(this.bulletCallbak, this.enemyBulletFreq)
+    }
   }
 }

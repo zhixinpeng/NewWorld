@@ -8,25 +8,35 @@
       false,
       null,
       true,
-      true
-    ],
-    [
-      false,
-      false,
-      false,
       true,
       true
     ],
     [
       false,
+      false,
+      false,
+      false,
       true,
+      true
+    ],
+    [
+      false,
       true,
+      false,
       false
     ],
     [
       false,
       true,
       true,
+      false,
+      false
+    ],
+    [
+      false,
+      true,
+      true,
+      false,
       false,
       false
     ]
@@ -37,7 +47,8 @@
     "hero",
     "heroBullet",
     "buff",
-    "enemy"
+    "enemy",
+    "enemyBullet"
   ],
   "design-resolution-width": 960,
   "design-resolution-height": 640,
