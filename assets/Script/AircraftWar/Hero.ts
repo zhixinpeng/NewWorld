@@ -28,6 +28,7 @@ export default class Hero extends cc.Component {
   private heroDropHp: cc.Node = null
 
   private currentX: number
+  private currentY: number
   private currentState: GameState
   private controller: Controller
 
@@ -36,6 +37,7 @@ export default class Hero extends cc.Component {
     manager.enabled = true
     this.currentState = GameState.none
     this.currentX = 0
+    this.currentY = 0
     this.onDrag()
 
     this.node.x = 0
@@ -57,6 +59,7 @@ export default class Hero extends cc.Component {
 
   private dragStart(event: cc.Event.EventTouch) {
     this.currentX = event.getLocation().x
+    this.currentY = event.getLocation().y
   }
 
   private dragMove(event: cc.Event.EventTouch) {
@@ -64,13 +67,19 @@ export default class Hero extends cc.Component {
     const location = this.node.getPosition()
     const minX = -this.node.parent.width / 2 + this.node.width / 2
     const maxX = -minX
+    const minY = -this.node.parent.height / 2 + this.node.height / 2
+    const maxY = -minY
 
     location.x += (target.x - this.currentX) * this.moveRatio
+    location.y += (target.y - this.currentY) * this.moveRatio
 
     this.currentX = target.x
+    this.currentY = target.y
 
     if (location.x < minX) location.x = minX
     if (location.x > maxX) location.x = maxX
+    if (location.y < minY) location.y = minY
+    if (location.y > maxY) location.y = maxY
 
     this.node.setPosition(location)
   }
