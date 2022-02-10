@@ -49,6 +49,9 @@ export default class Controller extends cc.Component {
   @property(EnemyBulletGroup)
   private enemyBulletGroup: EnemyBulletGroup = null
 
+  @property(cc.Node)
+  private pauseBackButton: cc.Node = null
+
   public currentState: GameState
   public score: number = 0
   public bombNumber: number = 0
@@ -94,7 +97,14 @@ export default class Controller extends cc.Component {
   }
 
   // 显示返回按钮
-  public showBackButtonPausing(bool: boolean) {}
+  public showBackButtonPausing(bool: boolean) {
+    this.pauseBackButton.active = bool
+    if (bool) {
+      this.pauseBackButton.opacity = 0
+      this.pauseBackButton.scale = 0.95
+      cc.tween(this.pauseBackButton).to(0.2, { scale: 1, opacity: 255 }).start()
+    }
+  }
 
   // 恢复行动
   public resumeAction() {
