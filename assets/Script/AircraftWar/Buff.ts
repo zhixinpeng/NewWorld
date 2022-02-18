@@ -49,7 +49,7 @@ export default class Buff extends cc.Component {
     }
   }
 
-  onCollisionEnter(other: cc.Component, self: cc.Component) {
+  protected onCollisionEnter(other: cc.Component, self: cc.Component) {
     this.buffGroup.buffDied(self.node)
   }
 }

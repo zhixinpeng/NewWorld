@@ -31,7 +31,7 @@ export default class Bullet extends cc.Component {
   }
 
   // 碰撞检测
-  onCollisionEnter(other: cc.Component, self: cc.Component) {
+  protected onCollisionEnter(other: cc.Component, self: cc.Component) {
     this.bulletGroup.bulletDied(self.node)
   }
 }

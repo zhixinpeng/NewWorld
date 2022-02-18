@@ -11,7 +11,7 @@ export default class EnemyCollision extends cc.Component {
   }
 
   // 碰撞检测
-  onCollisionEnter(other: cc.Component, self: cc.Component) {
+  protected onCollisionEnter(other: cc.Component, self: cc.Component) {
     if (self.node.group === 'enemy') {
       const enemy: Enemy = this.node.parent.getComponent('Enemy')
       if (other.node.group === 'heroBullet') {

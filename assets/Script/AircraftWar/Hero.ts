@@ -92,7 +92,7 @@ export default class Hero extends cc.Component {
     }
   }
 
-  private onCollisionEnter(other: cc.Component, self: cc.Component) {
+  protected onCollisionEnter(other: cc.Component, self: cc.Component) {
     if (other.node.group === 'buff') {
       if (other.node.name === 'buffBullet') {
         this.bulletGroup.changeBullet(other.node.name)
